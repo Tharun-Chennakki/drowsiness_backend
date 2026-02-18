@@ -5,6 +5,8 @@ import numpy as np
 import base64
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import os
+
 
 # --- SETUP FLASK APP ---
 app = Flask(__name__)
@@ -12,7 +14,7 @@ CORS(app)
 
 # --- LOAD YOUR TRAINED YOLO MODEL ---
 try:
-    model = YOLO("best.pt")
+    model = YOLO(os.path.join(os.path.dirname(__file__), "best.pt"))
     print("✅ Model 'best.pt' loaded successfully.")
 except Exception as e:
     print(f"❌ Error loading model: {e}")
@@ -107,6 +109,7 @@ def detect():
 
 # --- START THE SERVER ---
 if __name__ == '__main__':
-    print("🚀 Starting Flask server on http://127.0.0.1:5001")
-    app.run(host='0.0.0.0', port=5001)
+    port = int(os.environ.get("PORT", 5001))
+    app.run(host='0.0.0.0', port=port)
+
 
